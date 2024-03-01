@@ -1,0 +1,129 @@
+package grp4cams;
+
+import java.time.LocalDate;
+
+public class CampInfo {
+    private String campName;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDate rcDate;
+    private String userGroup;
+    private String location;
+    private int totalSlot;
+    private int currentSlot;
+    private int ccSlot;
+    private int currentCCSlot;
+    private String desc;
+    private String sIC;
+    
+    public CampInfo(String campName, LocalDate startDate, LocalDate endDate, LocalDate rcDate, String userGroup,
+			String location, int totalSlot, int ccSlot, String desc, String sIC) {
+		super();
+		this.campName = campName;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.rcDate = rcDate;
+		this.userGroup = userGroup;
+		this.location = location;
+		this.totalSlot = totalSlot;
+		this.ccSlot = ccSlot;
+		this.desc = desc;
+		this.sIC = sIC;
+		this.currentSlot = totalSlot;
+		this.currentCCSlot = ccSlot;
+		
+	}
+
+    public String getCampName() {
+        return campName;
+    }
+
+    public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public LocalDate getRcDate() {
+        return rcDate;
+    }
+
+    public void setRcDate(LocalDate rcDate) {
+        this.rcDate = rcDate;
+    }
+
+    public String getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(String userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getTotalSlot() {
+        return totalSlot;
+    }
+
+    public void setTotalSlot(int totalSlot) {
+        this.totalSlot = totalSlot;
+    }
+  
+    public int getCurrentSlot() {
+		return currentSlot;
+	}
+
+	public void setCurrentSlot(int currentSlot) {
+		this.currentSlot = currentSlot;
+	}
+
+	public int getCcSlot() {
+        return ccSlot;
+    }
+
+    public void setCcSlot(int ccSlot) {
+        this.ccSlot = ccSlot;
+    }
+
+	public int getCurrentCCSlot() {
+		return currentCCSlot;
+	}
+
+	public void setCurrentCCSlot(int currentCCSlot) {
+		this.currentCCSlot = currentCCSlot;
+	}
+    
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getsIC() {
+        return sIC;
+    }
+
+    public void setsIC(String sIC) {
+        this.sIC = sIC;
+    }
+
+}

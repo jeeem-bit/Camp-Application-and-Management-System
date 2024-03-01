@@ -1,0 +1,93 @@
+package grp4cams;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class User {
+	private String name;
+    private String UserID;
+    private String pw;
+    private String faculty;
+    private String email;
+    private String member;
+    private boolean firstLogin;
+    private boolean withdrawnFromCamp;
+
+    public User(String name, String userID, String pw, String faculty, String mem){
+        super();
+        this.name = name;
+        this.UserID = userID;
+        this.pw = pw;
+        this.faculty = faculty;
+        this.member = mem;
+        this.firstLogin = true;
+        this.email = userID + "@e.ntu.edu.sg";
+        
+    }
+
+	public String getName() {
+		return name;
+	}
+    
+	public String getUserID() {
+		return UserID;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	
+	public String getFaculty() {
+		return faculty;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getMember() {
+		return member;
+	}
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
+	
+	public static User validateUser(String userID, String pw, UserList userList) {
+		ArrayList<User> users = userList.getUserList();
+		for (User user : users) {
+	        if (userID.equalsIgnoreCase(user.getUserID()) && pw.equals(user.getPw())) {
+	            return user;
+	        }
+	    }
+	    return null;
+	}
+	
+    public void changePassword(Scanner sc, LoginManager loginManager, UserList userList) {
+        System.out.print("Enter new password: ");
+        String newPW = sc.next();
+        setPw(newPW);
+        System.out.println("Password changed successfully. Please log in again.\n");
+        loginManager.userLogin(userList);
+    }
+    
+    private List<String> withdrawnCampNames = new ArrayList<>();
+    
+    public List<String> getWithdrawnCampNames() {
+        return withdrawnCampNames;
+    }
+
+    public void addWithdrawnCampName(String campName) {
+        withdrawnCampNames.add(campName);
+    }
+    
+}

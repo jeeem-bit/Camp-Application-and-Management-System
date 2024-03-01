@@ -1,0 +1,67 @@
+package grp4cams;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Enquiry {
+	private User student;
+    private String enquiryString;
+    private boolean processed;
+    private String replyStringStaff;
+    private String replyStringComm;
+    
+    public Enquiry(User student, String enquiryString) {
+        this.student = student;
+        this.enquiryString = enquiryString;
+        this.processed = false;
+        this.replyStringStaff = null;
+        this.replyStringComm = null;
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public String getEnquiry() {
+        return enquiryString;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public String getReplyStaff() {
+        return replyStringStaff;
+    }
+    
+    public void processEnquiryStaff(String replyString) {
+        this.processed = true;
+        this.replyStringStaff = replyString;
+    }
+    
+    public String getReplyComm() {
+        return replyStringComm;
+    }
+    
+    public void processEnquiryComm(String replyStringComm) {
+        this.processed = true;
+        this.replyStringComm = replyStringComm;
+    }
+    
+    public void editEnquiry(String newEnquiryString) {
+        if (!processed) {
+            this.enquiryString = newEnquiryString;
+            System.out.println("Your enquiry had been edited.");
+        } else {
+            System.out.println("Your enquiry has been processed. It can no longer be edited.");
+        }
+    }
+    
+    public void deleteEnquiry(List<Enquiry> campEnquiries) {
+        if (!processed) {
+            campEnquiries.remove(this);
+        } else {
+            System.out.println("Your enquiry has been processed. It can no longer be deleted.");
+        }
+    }
+}

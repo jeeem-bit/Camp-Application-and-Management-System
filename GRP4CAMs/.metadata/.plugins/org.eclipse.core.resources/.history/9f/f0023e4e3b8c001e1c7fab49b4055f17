@@ -1,0 +1,83 @@
+package grp4cams;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+/**
+ * Represents the suggestions
+ * @author Chia Jia En
+ * @version 1.0
+ * @since 2023-11-26
+ */
+public class Suggestions {
+	private User student;
+    private String suggestionString;
+    private String approved;
+    private List<String> suggestions;
+    
+    /**
+     * Constructor for the sugestion
+     * @param student
+     * @param suggestionString
+     * @param suggestions
+     */
+    public Suggestions(User student, String suggestionString, List<String> suggestions) {
+        this.student = student;
+        this.suggestionString = suggestionString;
+        this.approved = "Pending";
+        this.suggestions = suggestions;
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public String getSuggestionString() {
+        return suggestionString;
+    }
+
+    public String isApproved() {
+        return approved;
+    }
+    
+    public List<String> getSuggestions() {
+        return suggestions;
+    }
+    
+    public void approveSuggestion() {
+        this.approved = "Approved";
+    }
+    
+    public void rejectSuggestion() {
+    	this.approved = "Rejected";
+    }
+    
+    public void addSuggestions(int index, String newSuggestion) {
+    	this.suggestions.add(Integer.toString(index));
+    	this.suggestions.add(newSuggestion);
+    }
+    
+    public void editSuggestions(String newSuggestionString, List<String> newSuggestions) {
+        if (this.approved == "Pending") {
+            this.suggestionString = newSuggestionString;
+            this.suggestions = newSuggestions;
+            System.out.println("Your suggestion had been edited.");
+        } 
+        else if (this.approved == "Rejected"){
+        	System.out.println("Your suggestion has been rejected. It can no longer be edited.");
+        }
+        else System.out.println("Your suggestion has been approved. It can no longer be edited.");
+            
+    }
+    
+    public void deleteSuggestions(List<Suggestions> campSuggestions) {
+        if (this.approved == "Pending") {
+            campSuggestions.remove(this);
+        } else {
+            System.out.println("Your suggestion has been processed. It can no longer be deleted.");
+        }
+    }  
+}

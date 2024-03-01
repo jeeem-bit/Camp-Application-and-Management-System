@@ -1,0 +1,219 @@
+package grp4cams;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Scanner;
+
+public class Validator {
+	
+	// check if choice is integer
+    public static boolean isInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+	
+    // format date 
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+	// check if date is correct format
+    public static LocalDate getValidDateInput(Scanner scanner, String prompt) {
+        LocalDate date = null;
+        do {
+            System.out.println(prompt);
+            String dateString = scanner.nextLine();
+            try {
+                date = LocalDate.parse(dateString, formatter);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please enter the date in the format dd-mm-yyyy.");
+            }
+        } while (true);
+        return date;
+    }
+    
+    // check if camp name is unique
+    public static boolean isUniqueName(String campName, List<Camp> campList) {
+        for (Camp existingCamp : campList) {
+            if (existingCamp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    public static boolean FacultyFound(String campName, List<Camp> campList, User currentUser) {
+        for (Camp camp : campList) {
+            if (camp.getcInfo().getCampName().equalsIgnoreCase(campName) && camp.isVisible() == true) {
+                String userGroup = camp.getcInfo().getUserGroup();
+                return userGroup.equalsIgnoreCase(currentUser.getFaculty()) || userGroup.equalsIgnoreCase("NTU");
+            }
+        }
+        return false;
+    }
+    
+    // check if user has already signed up for the camp
+    public static boolean hasSignedUp(String campName, List<Camp> campList, User currentUser) {
+    	for (Camp camp : campList) {
+    		if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+		    	for (Attendee attendee : camp.getAttendeesList()) {
+		            if (attendee.getUser().equals(currentUser)) {
+		                return true; 
+		            }
+		        }
+    		}
+    	}
+		return false;
+    }
+    
+    // check if the camp is full
+    public static boolean isFull(String campName, List<Camp> campList) {
+        int cSlot = 0;
+    	for (Camp camp : campList) {
+            if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+            	cSlot = camp.getcInfo().getCurrentSlot();
+            	break;
+            }
+    	}
+    	return (cSlot <= 0);
+    }
+       
+    // check if date is over
+    public static boolean isOver(String campName, List<Camp> campList) {
+    	LocalDate rcDate = null;
+    	for (Camp camp : campList) {
+            if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+            	rcDate = camp.getcInfo().getRcDate();
+            	break;
+            }
+    	}
+    	
+    	if(rcDate != null && rcDate.isBefore(LocalDate.now())){
+    		return true;
+    	} else {
+    		return false;
+    	}		
+    }
+    
+    // check if date of camp clash
+    public static boolean dateClash(String campName, List<Camp> campList, User currentUser) {
+    	LocalDate regSdate = null;
+    	LocalDate regEdate = null;
+
+    	for (Camp camp : campList) {
+    		if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+    			regSdate = camp.getcInfo().getStartDate();
+    			regEdate = camp.getcInfo().getEndDate();
+    		}
+    	}
+    	
+        if (regSdate == null || regEdate == null) {
+            return false;
+        }
+
+    	for (Camp camp : campList) {
+    		for (Attendee attendee : camp.getAttendeesList()) {
+    			if (attendee.getUser().equals(currentUser)) {
+    				if (regSdate.isBefore(camp.getcInfo().getEndDate()) && regEdate.isAfter(camp.getcInfo().getStartDate()) ||
+    						regSdate.equals(camp.getcInfo().getEndDate()) || regEdate.equals(camp.getcInfo().getStartDate())) {
+    					return true; // clash detected
+    				}
+    			}
+    		}
+
+    	}
+    	return false;
+    }
+    
+    // check if the camp comm is full
+    public static boolean isFullCC(Camp rCamp) {
+		return (rCamp.getcInfo().getCurrentCCSlot() <= 0);
+    }
+ 
+    // check if already camp comm
+    public static boolean alrdyCC(List<Camp> campList, User currentUser) {
+    	for (Camp camp : campList) {
+	    	for (Attendee attendee : camp.getAttendeesList()) {
+	            if (attendee.getUser().equals(currentUser)) {
+	                if (attendee.getRole().equalsIgnoreCase("Committee")) {
+	                	return true;
+	                }
+	            }
+	        }
+    	}
+		return false;
+    }
+    
+    // check if user has been registered
+    public static boolean isRegistered(Camp camp, User currentUser) {
+        for (Attendee attendee : camp.getAttendeesList()) {
+            if (attendee.getUser().equals(currentUser)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+   // check if user is a camp comm
+    public static boolean isaCC(String campName, List<Camp> campList, User currentUser) {
+    	for (Camp camp : campList) {
+    		if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+    	    	for (Attendee attendee : camp.getAttendeesList()) {
+    	            if (attendee.getUser().equals(currentUser)) {
+    	                if (attendee.getRole().equalsIgnoreCase("Committee")) {
+    	                	return true;
+    	                }
+    	            }
+    	        }
+	        }
+    	}
+		return false;
+    }
+   
+    // check if camp exists
+    public static boolean existingCamp(String campName, List<Camp> campList, User currentUser) {
+        for (Camp camp : campList) {
+            if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+                String userGroup = camp.getcInfo().getUserGroup();
+                return userGroup.equalsIgnoreCase(currentUser.getFaculty()) || userGroup.equalsIgnoreCase("NTU");
+            }
+        }
+        return false;
+    }
+    
+    // find camp by name
+    public static Camp campFinderByName(String campName, List<Camp> campList) {
+        for (Camp camp : campList) {
+            if (camp.getcInfo().getCampName().equalsIgnoreCase(campName)) {
+                return camp;
+            }
+        }
+        return null; // Camp not found
+    }
+    
+    // check if is committee member
+    public static boolean isCommitee(List<Attendee> attendeeList, User currentUser) {
+    	for (Attendee attendee : attendeeList) {
+    		// if is attendee
+            if (attendee.getUser().getUserID().equalsIgnoreCase(currentUser.getUserID())) {
+            	// if is committee
+                if (attendee.getRole().equalsIgnoreCase("COMMITEE")) {
+                	return true;
+                }
+            }
+        }
+        return false; 
+    }
+    
+    // check if is staff
+    public static boolean isStaff(User currentUser) {
+    	if(currentUser.getMember().equalsIgnoreCase("staff")) {return true;}
+        return false; 
+    }
+}

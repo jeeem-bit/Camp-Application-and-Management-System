@@ -1,0 +1,319 @@
+package grp4cams;
+
+import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+
+public class Camp {
+    private CampInfo cInfo;
+    private List<Attendee> attendeesList;
+    private List<Commitee> commiteeList;
+    private List<Suggestions> suggestionsList;
+    private List<Enquiry> enquiriesList;
+    private boolean isVisible;
+
+	public Camp(CampInfo campInfo) {
+        this.cInfo = campInfo;
+        this.attendeesList = new ArrayList<>();
+        this.commiteeList = new ArrayList<>();
+        this.suggestionsList = new ArrayList<>();
+        this.enquiriesList = new ArrayList<>();
+        this.isVisible = true;
+    }
+	
+	public CampInfo getcInfo() {
+		return cInfo;
+	}
+
+	public void setcInfo(CampInfo cInfo) {
+		this.cInfo = cInfo;
+	}
+
+    public List<Attendee> getAttendeesList() {
+        return attendeesList;
+    }
+    
+    public List<Enquiry> getEnquiriesList(){
+    	return enquiriesList;
+    }
+    
+    public List<Suggestions> getSuggestionList(){
+    	return suggestionsList;
+    } 
+    public List<Commitee> getCommiteeList(){
+    	return commiteeList;
+    }
+    
+    public void addCommitteeMember(Commitee committeeMember) {
+    	commiteeList.add(committeeMember);
+    }
+    
+    public List<Attendee> getRegisteredStudents() {
+        List<Attendee> registeredStudents = new ArrayList<>();
+        for (Attendee attendee : attendeesList) {
+            if (attendee.getRole().equalsIgnoreCase("ATTENDEE") || attendee.getRole().equalsIgnoreCase("COMMITTEE")) {
+                registeredStudents.add(attendee);
+            }
+        }
+        return registeredStudents;
+    }
+    
+    public List<Attendee> getCommitteeMembers() {
+        List<Attendee> registeredStudents = new ArrayList<>();
+        for (Attendee attendee : attendeesList) {
+            if ( attendee.getRole().equalsIgnoreCase("COMMITTEE")) {
+                registeredStudents.add(attendee);
+            }
+        }
+        return registeredStudents;
+    }
+    
+    public List<Attendee> getAttendees() {
+        List<Attendee> registeredStudents = new ArrayList<>();
+        for (Attendee attendee : attendeesList) {
+            if (attendee.getRole().equalsIgnoreCase("ATTENDEE")) {
+                registeredStudents.add(attendee);
+            }
+        }
+        return registeredStudents;
+    }
+    
+    public void addtoAList(Attendee user) {
+        attendeesList.add(user);
+    }
+    
+    public void addEnquiry(Enquiry newEnquiry) {
+    	enquiriesList.add(newEnquiry);
+    	System.out.println("Enquiry added!");
+    }
+    
+    public void deleteEnquiry(Enquiry enquiry) {
+    	if (enquiriesList.contains(enquiry)) {
+            enquiriesList.remove(enquiry);
+            System.out.println("Enquiry has been deleted successfully.");
+        } else {
+            System.out.println("Enquiry not found.");
+        }
+    }
+	
+    public Map<Integer, Enquiry> showStaffEnquiry(Map<Integer, Enquiry> enquiriesList, String campName) {
+    	System.out.println("\n----- Enquiries in " + campName + "-----");
+    	int i = 0;
+    	for (Enquiry enquiry : this.getEnquiriesList()) {
+    	enquiriesList.put(i, enquiry);
+    	System.out.println("Index: " + i);
+    	System.out.println("Camp: " + this.getcInfo().getCampName());
+    	System.out.println("Enquiry: " + enquiry.getEnquiry());
+    	System.out.println("Status: " + (enquiry.isProcessed() ? "Processed" : "Pending"));
+    	System.out.println("Reply from Staff: " + enquiry.getReplyStaff());
+		System.out.println("Reply from Commitee: " + enquiry.getReplyComm());
+    	System.out.println("----------------------");
+    	i++;
+    	}
+    	return enquiriesList;
+    }
+    
+    public Map<Integer, Suggestions> showStaffSuggestions(Map<Integer, Suggestions> suggestionsList, String campName) {
+    	System.out.println("\n----- Enquiries in " + campName + "-----");
+    	int i = 0;
+    	for (Suggestions suggestion : this.getSuggestionsList()) {
+    	suggestionsList.put(i, suggestion);
+    	System.out.println("Index: " + i);
+    	System.out.println("Camp: " + this.getcInfo().getCampName());
+    	System.out.println("Suggestion: " + suggestion.getSuggestionString());
+    	System.out.println("Status: " + (suggestion.isApproved()));
+    	System.out.println("----------------------");
+    	i++;
+    	}
+    	return suggestionsList;
+    }
+    
+    public void removeAttendee(Attendee attendee) {
+        if (attendeesList != null) {
+            attendeesList.remove(attendee);
+        }
+    }
+    
+    public List<Suggestions> getSuggestionsList() {
+        return suggestionsList;
+    }
+	
+	public boolean isVisible() {
+		return isVisible;
+	}
+	
+    public void toggleVisibility() {
+        isVisible = !isVisible;
+    }
+ 
+	public static Camp createCamp(String campName, LocalDate startDate, LocalDate endDate, LocalDate rcDate, 
+			String userGroup, String location, int totalSlot, int ccSlot, String desc, String sIC) {
+        CampInfo campInfo = new CampInfo(campName, startDate, endDate, rcDate, userGroup, location, totalSlot, ccSlot, desc, sIC);
+        return new Camp(campInfo);
+    }
+    
+    public void printAllCampDetails() {
+    	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    	
+        System.out.printf("\nCamp: %s\n", cInfo.getCampName());
+        System.out.println("Start Date: " + cInfo.getStartDate().format(dateFormatter));
+        System.out.println("End Date: " + cInfo.getEndDate().format(dateFormatter));
+        System.out.println("Registration Closing Date: " + cInfo.getRcDate().format(dateFormatter));
+        System.out.println("User Group: " + cInfo.getUserGroup());
+        System.out.println("Location: " + cInfo.getLocation());
+        System.out.println("Total Camp Slots: " + cInfo.getTotalSlot());
+        System.out.println("Current Available Camp Slot: " + cInfo.getCurrentSlot());
+        System.out.println("Total Camp Committee Slots: " + cInfo.getCcSlot());
+        System.out.println("Current Available Camp Committee Slots: " + cInfo.getCurrentCCSlot());
+        System.out.println("Description: " + cInfo.getDesc());
+        System.out.println("Staff In Charge: " + cInfo.getsIC());
+        
+    }
+ 
+    public void printStudCampDetails() {
+    	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    	
+        System.out.printf("\nCamp: %s\n", cInfo.getCampName());
+        System.out.println("Start Date: " + cInfo.getStartDate().format(dateFormatter));
+        System.out.println("End Date: " + cInfo.getEndDate().format(dateFormatter));
+        System.out.println("Registration Closing Date: " + cInfo.getRcDate().format(dateFormatter));
+        System.out.println("Location: " + cInfo.getLocation());
+        System.out.println("Current Available Camp Slot: " + cInfo.getCurrentSlot());
+        System.out.println("Current Available Camp Committee Slots: " + cInfo.getCurrentCCSlot());
+        System.out.println("Description: " + cInfo.getDesc());
+        System.out.println("Staff In Charge: " + cInfo.getsIC());
+    }
+  
+    public static void viewAllCamps(List<Camp> campList, User currentUser) {
+    	
+        System.out.println("\n----- All Camps -----");
+        if (campList.isEmpty()) {
+        	System.out.println("No camps available!");
+        } else {
+        	// filter for students and staff
+        	if (currentUser.getMember().equalsIgnoreCase("staff")) {
+        		for (Camp camp : campList) {
+	            camp.printAllCampDetails();
+        		}
+        	} else if (currentUser.getMember().equalsIgnoreCase("student")) {
+        		for (Camp camp : campList) {
+        			if(camp.isVisible == true) {
+        				String UG = camp.cInfo.getUserGroup();
+        				if(UG.equalsIgnoreCase(currentUser.getFaculty()) || UG.equalsIgnoreCase("NTU")) {
+        					camp.printStudCampDetails();
+        				}
+        			}
+        		}
+        	}
+        }
+    }
+    
+    public static void sortedViewAllCampList(Scanner sc, List<Camp> campList, User currentUser) {
+    	int option = 0;
+    	
+    	Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getCampName().toLowerCase()));
+    	viewAllCamps(campList, currentUser);
+    	List<Camp> tempCampList = new ArrayList<>();
+    	
+        do {
+        	Menu.viewMenu();
+        	System.out.print("Enter option: ");
+			option = sc.nextInt();
+			
+			if (option != 1 && option != 2 && option != 3 && option != 4 && option != 5) {System.out.println("Invalid Choice");}
+			
+			switch(option) {
+			case 1: // filter by alphabet
+				Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getCampName().toLowerCase()));
+		    	viewAllCamps(campList, currentUser);
+		    	break;
+			case 2: // filter by start date
+				Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getStartDate()));
+		    	viewAllCamps(campList, currentUser);
+				break;
+			case 3: // filter by end date
+				Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getEndDate()));
+				viewAllCamps(campList, currentUser);
+				break;
+			case 4: // filter by locations
+				System.out.println("Enter Location To Filter: ");
+				sc.nextLine();
+				String location = sc.nextLine();
+	        	for (Camp camp : campList) {
+	        		if(camp.getcInfo().getLocation().toLowerCase().equalsIgnoreCase(location.toLowerCase())) {
+	        			tempCampList.add(camp);
+	        		}
+	        	}
+				// Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getLocation()));
+				viewAllCamps(tempCampList, currentUser);
+				break;
+			case 5: // filter by start month
+				System.out.println("Enter Start Month To Filter (e.g., January): ");
+				sc.nextLine();
+			    String startMonth = sc.nextLine();
+			    tempCampList = campList.stream()
+			            .filter(camp -> camp.getcInfo().getStartDate().getMonth().toString().equalsIgnoreCase(startMonth))
+			            .collect(Collectors.toList());
+			    Collections.sort(tempCampList, Comparator.comparing(camp -> camp.getcInfo().getCampName().toLowerCase()));
+			    viewAllCamps(tempCampList, currentUser);
+			    break; 
+			case 6: // filter by end month
+				System.out.println("Enter End Month To Filter (e.g., January): ");
+				sc.nextLine();
+			    String endMonth = sc.nextLine();
+			    tempCampList = campList.stream()
+			            .filter(camp -> camp.getcInfo().getEndDate().getMonth().toString().equalsIgnoreCase(endMonth))
+			            .collect(Collectors.toList());
+			    Collections.sort(tempCampList, Comparator.comparing(camp -> camp.getcInfo().getCampName().toLowerCase()));
+			    viewAllCamps(tempCampList, currentUser);
+				break;
+			case 7: // return
+				break; 
+			default:
+				Collections.sort(campList, Comparator.comparing(camp -> camp.getcInfo().getCampName().toLowerCase()));
+		    	viewAllCamps(campList, currentUser);
+		    	break;
+			} 
+        }while(option!=5);
+    }
+
+	public void deleteSuggestion(Suggestions selectedSuggestion) {
+		if (suggestionsList.contains(selectedSuggestion)) {
+			suggestionsList.remove(selectedSuggestion);
+            // System.out.println("Suggestion has been deleted successfully.");
+        } else {
+            System.out.println("Suggestion not found.");
+        }
+	}
+
+	public void addSuggestion(Suggestions newSuggestion) {
+		suggestionsList.add(newSuggestion);
+    	System.out.println("Suggestion added!");
+	}
+
+	public Map<Integer, Enquiry> showCommEnquiry(Map<Integer, Enquiry> enquiriesList2, Camp cCamp) {
+		System.out.println("\n----- Enquiries in " + cCamp.getcInfo().getCampName() + "-----");
+    	int i = 0;
+    	for (Enquiry enquiry : this.getEnquiriesList()) {
+    		enquiriesList2.put(i, enquiry);
+    		System.out.println("Index: " + i);
+    		System.out.println("Camp: " + this.getcInfo().getCampName());
+    		System.out.println("Enquiry: " + enquiry.getEnquiry());
+    		System.out.println("Status: " + (enquiry.isProcessed() ? "Processed" : "Pending"));
+    		System.out.println("Reply from Staff: " + enquiry.getReplyStaff());
+    		System.out.println("Reply from Commitee: " + enquiry.getReplyComm());
+    		System.out.println("----------------------");
+    		i++;
+    	}
+    	return enquiriesList2;
+    }
+}

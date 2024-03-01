@@ -1,0 +1,39 @@
+package grp4cams;
+
+import java.util.Scanner;
+
+public class LoginManager {
+
+    public User userLogin(UserList userList) {
+    	
+    	System.out.println("----- Login -----\n");
+        Scanner sc = new Scanner(System.in);
+        String userID;
+        String pw;
+        User currentUser = null;
+
+        do {
+            System.out.print("Enter UserID: ");
+            userID = sc.next();
+            System.out.print("Enter Password: ");
+            pw = sc.next();
+            currentUser = User.validateUser(userID, pw, userList);
+
+            if (currentUser != null && currentUser.isFirstLogin()) {
+                System.out.println("\nLogging in for the first time -> please change your password");
+                System.out.print("Enter new password: ");
+                String newPW = sc.next();
+                currentUser.setPw(newPW);
+                currentUser.setFirstLogin(false);
+                System.out.println("Password changed successfully -> please log in again\n");
+                currentUser = null; // to initiate re-login
+            } else if (currentUser != null) {
+                System.out.println("Login successful!");
+            } else {
+            	System.out.println("Incorrect userID or password -> please try again\n");
+            }
+        } while (currentUser == null);
+
+        return currentUser;
+    }
+}

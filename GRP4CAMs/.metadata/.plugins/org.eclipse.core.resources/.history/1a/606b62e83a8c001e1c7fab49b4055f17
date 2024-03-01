@@ -1,0 +1,94 @@
+package grp4cams;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents an enquiry
+ * @author jiaen
+ * @version 1.0
+ * @since 2023-11-26
+ */
+public class Enquiry {
+	private User student;
+    private String enquiryString;
+    private boolean processed;
+    private String replyStringStaff;
+    private String replyStringComm;
+    
+    /**
+     * Constructor for an enquiry
+     * @param student The user of the student that made This enquiry
+     * @param enquiryString The ennquiry being made 
+     */
+    public Enquiry(User student, String enquiryString) {
+        this.student = student;
+        this.enquiryString = enquiryString;
+        this.processed = false;
+        this.replyStringStaff = null;
+        this.replyStringComm = null;
+    }
+
+    /**
+     * Get the student that made This enquiry
+     * @return the student that made the enquiry
+     */
+    public User getStudent() {
+        return student;
+    }
+    
+    /**
+     * Get the enquiry 
+     * @return the enquiry string
+     */
+    public String getEnquiry() {
+        return enquiryString;
+    }
+
+    /**
+     * Returns if the enquiry is processed 
+     * @return true or false, depending on if the enquiry has been processed
+     */
+    public boolean isProcessed() {
+        return processed;
+    }
+    
+    /**
+     * Get the staff's reply to the enquiry
+     * @return the enquiry string from the staff
+     */
+    public String getReplyStaff() {
+        return replyStringStaff;
+    }
+    
+    public void processEnquiryStaff(String replyString) {
+        this.processed = true;
+        this.replyStringStaff = replyString;
+    }
+    
+    public String getReplyComm() {
+        return replyStringComm;
+    }
+    
+    public void processEnquiryComm(String replyStringComm) {
+        this.processed = true;
+        this.replyStringComm = replyStringComm;
+    }
+    
+    public void editEnquiry(String newEnquiryString) {
+        if (!processed) {
+            this.enquiryString = newEnquiryString;
+            System.out.println("Your enquiry had been edited.");
+        } else {
+            System.out.println("Your enquiry has been processed. It can no longer be edited.");
+        }
+    }
+    
+    public void deleteEnquiry(List<Enquiry> campEnquiries) {
+        if (!processed) {
+            campEnquiries.remove(this);
+        } else {
+            System.out.println("Your enquiry has been processed. It can no longer be deleted.");
+        }
+    }
+}
